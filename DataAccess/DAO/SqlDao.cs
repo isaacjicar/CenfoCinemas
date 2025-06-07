@@ -44,9 +44,10 @@ namespace DataAccess.DAO
         }
 
         //Metodo para la ejecucion de SP sin retorno
-        public void ExecuteProduce(SqlOperations operation) {
-        //conectarse a la base de datos 
-        //ejecutar el sp
+        public void ExecuteProduce(SqlOperations operation)
+        {
+            //conectarse a la base de datos 
+            //ejecutar el sp
         }
 
         //Metodo para la ejecucion de SP con retorno de datos
@@ -61,5 +62,27 @@ namespace DataAccess.DAO
             var list = new List<Dictionary<string, object>>();
             return list;
         }
+
+        public void ExecuteProcedure(SqlOperations sqlOperation)
+        {
+            using (var conn = new SqlCommand(_connectionString))
+            {
+                using (var command = new SqlCommand(sqlOperation.ProcedureName, conn))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                    // Set de los parámetros
+                    foreach (var param in sqlOperation.Parameters)
+                    {
+                        command.Parameters.Add(param);
+                    }
+
+                    // Ejecuta el SP
+                    conn.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="CRUD\" />
+    <Folder Include="Database Scripts\" />
   </ItemGroup>
 
 </Project>
