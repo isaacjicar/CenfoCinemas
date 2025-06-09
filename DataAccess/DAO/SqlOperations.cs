@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,34 @@ namespace DataAccess.DAO
 {
     public class SqlOperations
     {
-        public String ProduceName { get; set; }
-        public List<String> Parameters { get; set; }
+
+        public string ProcedureName { get; set; }
+        public List<SqlParameter> Parameters { get; set; }
+        public SqlOperations()
+        {
+            Parameters = new List<SqlParameter>();
+        }
+
+        public void AddStringParameter(string ParamName, string ParamValue)
+        {
+            Parameters.Add(new SqlParameter(ParamName, ParamValue));
+        }
+
+        public void AddIntParam(string paramName, int paramValue)
+        {
+            Parameters.Add(new SqlParameter(paramName, paramValue));
+        }
+
+        public void AddDoubleParam(string paramName, double paramValue)
+        {
+            Parameters.Add(new SqlParameter(paramName, paramValue));
+        }
+
+        public void AddDateTimeParam(string paramName, DateTime paramValue)
+        {
+            Parameters.Add(new SqlParameter(paramName, paramValue));
+        }
     }
+
+
 }

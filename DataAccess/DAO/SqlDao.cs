@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,13 +22,14 @@ namespace DataAccess.DAO
         private static SqlDao _instance;
 
         private string _connectionString;
-
         // Paso 2: Redefinir el contructor default y convertilo en privado
 
         private SqlDao()
         {
             // Inicializar la cadena de conexión
-            _connectionString = string.Empty; // Reemplaza con tu cadena de conexión real
+            _connectionString = @"Data Source=srv-database-net.database.windows.net;Initial Catalog=cenfocinemas-db;Persist Security Info=True;User ID=sysman;Password=Cenfotec123;Trust Server Certificate=True";
+
+            // Reemplaza con tu cadena de conexión real
         }
 
         // Paso 3: Definir el metodo que expone la instancia 
@@ -43,44 +45,79 @@ namespace DataAccess.DAO
             return _instance;
         }
 
-        //Metodo para la ejecucion de SP sin retorno
-        public void ExecuteProduce(SqlOperations operation)
-        {
-            //conectarse a la base de datos 
-            //ejecutar el sp
-        }
+
 
         //Metodo para la ejecucion de SP con retorno de datos
 
-        public List<Dictionary<string, object>> ExecuteQueryProcedure(SqlOperations operation)
+        public List<Dictionary<string, object>> ExecuteQueryProcedure(SqlOperations sqlOperation)
         {
 
-            //conectarse a la base de datos
-            //ejecutar el sp 
-            //captura el resultado 
-            //convertir en dto
-            var list = new List<Dictionary<string, object>>();
-            return list;
-        }
+            var lstResults = new List<Dictionary<string, object>>();
 
-        public void ExecuteProcedure(SqlOperations sqlOperation)
-        {
-            using (var conn = new SqlCommand(_connectionString))
+            using (var conn = new SqlConnection(_connectionString))
+
             {
-                using (var command = new SqlCommand(sqlOperation.ProcedureName, conn))
+                using (var command = new SqlCommand(sqlOperation.ProcedureName, conn)
                 {
-                    command.CommandType = System.Data.CommandType.StoredProcedure;
-
-                    // Set de los parámetros
+                    CommandType = System.Data.CommandType.StoredProcedure
+                })
+                {
+                    //Set de los parametros
                     foreach (var param in sqlOperation.Parameters)
                     {
                         command.Parameters.Add(param);
                     }
+                    //Ejectura el SP
+                    conn.Open();
 
-                    // Ejecuta el SP
+                    //de aca en adelante la implementacion es distinta con respecto al procedure anterior
+                    // sentencia que ejectua el SP y captura el resultado
+                    var reader = command.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+
+                            var rowDict = new Dictionary<string, object>();
+
+                            for (var index = 0; index < reader.FieldCount; index++)
+                            {
+                                var key = reader.GetName(index);
+                                var value = reader.GetValue(index);
+                                //aca agregamos los valores al diccionario de esta fila
+                                rowDict[key] = value;
+                            }
+                            lstResults.Add(rowDict);
+                        }
+                    }
+
+                }
+            }
+
+            return lstResults;
+        }
+
+
+        public void ExecuteProcedure(SqlOperations sqlOperation)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                using (var command = new SqlCommand(sqlOperation.ProcedureName, conn)
+                {
+                    CommandType = System.Data.CommandType.StoredProcedure
+                })
+                {
+                    //Set de los parametros
+                    foreach (var param in sqlOperation.Parameters)
+                    {
+                        command.Parameters.Add(param);
+                    }
+                    //Ejectura el SP
                     conn.Open();
                     command.ExecuteNonQuery();
                 }
+
             }
         }
 
