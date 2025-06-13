@@ -36,6 +36,11 @@ namespace DataAccess.DAO
         {
             Parameters.Add(new SqlParameter(paramName, paramValue));
         }
+
+        public void Addint64Param(string paramName, int paramValue)
+        {
+            Parameters.Add(new SqlParameter(paramName, paramValue));
+        }
     }
 
 
