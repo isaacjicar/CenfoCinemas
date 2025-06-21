@@ -1,11 +1,11 @@
 ﻿--SP para Eliminar Usuario
-CREATE PROCEDURE Delete_USER_PR
+CREATE PROCEDURE Delete_Movie_PR
 (
 	@P_Id int
 )
 AS
 BEGIN
-	DELETE FROM TBL_User
+	DELETE FROM TBL_Movie
 	Where Id =@P_Id
 
 

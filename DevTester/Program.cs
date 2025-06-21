@@ -1,4 +1,5 @@
-﻿using DataAccess.CRUD;
+﻿using CoreApp;
+using DataAccess.CRUD;
 using DataAccess.DAO;
 using DTOs;
 using Newtonsoft.Json;
@@ -20,12 +21,15 @@ public class Program
             Console.WriteLine("\n===== MENÚ PRINCIPAL =====");
             Console.WriteLine("1. Crear usuario");
             Console.WriteLine("2. Consultar usuario");
-            Console.WriteLine("3. Actualizar usuario");
-            Console.WriteLine("4. Eliminar usuario");
-            Console.WriteLine("5. Registrar película");
-            Console.WriteLine("6. Actualizar usuario");
-            Console.WriteLine("7. Actualizar película");
-            Console.WriteLine("8. Eliminar película");
+            Console.WriteLine("3. Consultar usuario por ID");
+            Console.WriteLine("4. Consultar usuario por código");
+            Console.WriteLine("5. Actualizar usuario");
+            Console.WriteLine("6. Eliminar usuario");
+            Console.WriteLine("7. Registrar película");
+            Console.WriteLine("8. Consultar peliculas");
+            Console.WriteLine("9. Consultar películas por ID");
+            Console.WriteLine("10. Actualizar película");
+            Console.WriteLine("11. Eliminar película");
             Console.WriteLine("0. Salir");
             Console.Write("Seleccione una opción: ");
             var option = Console.ReadLine();
@@ -39,20 +43,30 @@ public class Program
                     ConsultarUsuario(sqlDao);
                     break;
                 case "3":
-                    ActualizarUsuario(sqlDao);
+                    ConsusltarUsuarioPorId(sqlDao);
                     break;
+                  
                 case "4":
-                    EliminarUsuarios(sqlDao);
+                    ConsualtarUsuarioPorUserCode(sqlDao);
                     break;
                 case "5":
-                    RegistrarPelicula(sqlDao);
+                    ActualizarUsuario(sqlDao);
                     break;
                 case "6":
-                    
+                    EliminarUsuarios(sqlDao);
                     break;
                 case "7":
+                    RegistrarPelicula(sqlDao);
                     break;
                 case "8":
+                    ConsultarPeliculas(sqlDao);
+                    break;
+                case "9":
+                    ConsultarPeliculasPorId(sqlDao);
+                    break;
+                case "10":
+                    break;
+                case "11":
                     break;
                 case "0":
                     exit = true;
@@ -91,8 +105,8 @@ public class Program
             Status = status,
             BirthDate = birthDate
         };
-        var uCrud = new UserCrudFactory();
-        uCrud.Create(user);
+        var um = new UserManager();
+        um.Create(user);
      
     }
 
@@ -133,6 +147,34 @@ public class Program
             Console.WriteLine(JsonConvert.SerializeObject(user));
         }
     }
+    static void ConsusltarUsuarioPorId(SqlDao sqlDao)
+    {
+        Console.WriteLine("\n--- Consultar Usuario por ID ---");
+        Console.Write("Ingrese el ID del usuario: ");
+        int userId = int.Parse(Console.ReadLine());
+
+        var uCrud = new UserCrudFactory();
+        var user = uCrud.RetrieveById<User>(userId);
+
+        if (user != null)
+        {
+            Console.WriteLine(JsonConvert.SerializeObject(user));
+
+        }
+    }
+
+    static void ConsualtarUsuarioPorUserCode(SqlDao sqlDao)
+    {
+        Console.WriteLine("\n--- Consultar Usuario por Código ---");
+        Console.Write("Ingrese el código de usuario: ");
+        string userCode = Console.ReadLine();
+        var uCrud = new UserCrudFactory();
+        var user = uCrud.RetrieveByUserCode<User>(new User { UserCode= userCode});
+        if (user != null)
+        {
+            Console.WriteLine(JsonConvert.SerializeObject(user));
+        }
+    }
 
     static void EliminarUsuarios(SqlDao sqlDao)
     {
@@ -150,28 +192,55 @@ public class Program
     {
         Console.WriteLine("\n--- Registrar Película ---");
         Console.Write("Título: ");
-        string title = Console.ReadLine();
+        var title = Console.ReadLine();
         Console.Write("Descripción: ");
-        string description = Console.ReadLine();
+        var description = Console.ReadLine();
         Console.Write("Fecha de lanzamiento (yyyy-MM-dd): ");
-        string releaseDate = Console.ReadLine();
+        var releaseDate = DateTime.Parse(Console.ReadLine());
         Console.Write("Género: ");
-        string genre = Console.ReadLine();
+        var genre = Console.ReadLine();
         Console.Write("Director: ");
-        string director = Console.ReadLine();
+        var director = Console.ReadLine();
 
-        var movieOperation = new SqlOperations();
-        movieOperation.ProcedureName = "CRE_MOVIES_PR";
-        movieOperation.AddStringParameter("P_Title", title);
-        movieOperation.AddStringParameter("P_Description", description);
-        movieOperation.AddStringParameter("P_ReleaseDate", releaseDate);
-        movieOperation.AddStringParameter("P_Genre", genre);
-        movieOperation.AddStringParameter("P_Director", director);
+        var movie = new Movie()
+        {
+            Title = title,
+            description = description,
+            ReleaseDate = releaseDate,
+            Genre = genre,
+            Director = director
+        };
+        var Mom  = new MovieManager();
+        Mom.Create(movie);
 
-        sqlDao.ExecuteProcedure(movieOperation);
-        Console.WriteLine("Película registrada exitosamente.\n");
+    }
+
+    static void ConsultarPeliculas(SqlDao sqlDao)
+    {
+        var movieCrud = new MovieCrudFactory();
+        var listMovies = movieCrud.RetrieveAll<Movie>();
+        foreach (var movie in listMovies)
+        {
+            Console.WriteLine(JsonConvert.SerializeObject(movie));
+        }
+    }
+
+    static void ConsultarPeliculasPorId(SqlDao sqlDao)
+    {
+        Console.WriteLine("\n--- Consultar Película por ID ---");
+        Console.Write("Ingrese el ID de la película: ");
+        int movieId = int.Parse(Console.ReadLine());
+        var movieCrud = new MovieCrudFactory();
+        var movie = movieCrud.RetrieveById<Movie>(movieId);
+        if (movie != null)
+        {
+            Console.WriteLine(JsonConvert.SerializeObject(movie));
+        }
     }
 
 
 
 }
+
+
+

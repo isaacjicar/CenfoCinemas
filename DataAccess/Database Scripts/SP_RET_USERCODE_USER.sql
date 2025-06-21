@@ -1,13 +1,12 @@
-﻿--SP para Consultar Usuarios
-CREATE PROCEDURE Consultation_USER_PR
+﻿CREATE PROCEDURE RET_UserCode_USERS_PR
 (
-	@P_Id int
+	@P_Usercode nvarchar(30)
 )
 AS
 BEGIN
 	select
      Id,
-	 Usercode,
+	 UserCode,
 	 Name,
 	 Email,
 	 Password,
@@ -16,6 +15,6 @@ BEGIN
 	 Created,
 	 Updated
 	 from TBL_User
-    WHERE Id =@P_Id;  
+    WHERE Usercode =@P_Usercode;  
 END
 GO

@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DTOs;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,11 @@ namespace DataAccess.DAO
         public void Addint64Param(string paramName, int paramValue)
         {
             Parameters.Add(new SqlParameter(paramName, paramValue));
+        }
+
+        internal void AddStringParameter(string v, Movie movie)
+        {
+            throw new NotImplementedException();
         }
     }
 

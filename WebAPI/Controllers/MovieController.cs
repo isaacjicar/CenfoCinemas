@@ -1,0 +1,48 @@
+﻿using CoreApp;
+using DTOs;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace WebAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class MovieController : ControllerBase
+    {
+
+        [HttpPost]
+        [Route("Create")]
+        public ActionResult create (Movie movie)
+        {
+            try
+            {
+                var um = new MovieManager();
+                um.Create(movie);
+                return Ok("Película creada correctamente: " + movie.Title);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("RetrieveAll")]
+        public ActionResult RetrieveAll()
+        {
+            try
+            {
+                var um = new MovieManager();
+                var listResults = um.RetrieveAll();
+
+                return Ok(listResults);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+    }
+}
