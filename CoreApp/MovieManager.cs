@@ -62,6 +62,62 @@ namespace CoreApp
             return uCrud.RetrieveById<Movie>(Id);
         }
 
+        public Movie Update(Movie movie)
+        {
+            try
+            {
+                if (ExistsTitle(movie.Title))
+                {
+                    var uCrud = new MovieCrudFactory();
+                    var exTM = uCrud.RetrieveById<Movie>(movie.id);
+
+                    if (exTM != null)
+                    {
+                      
+                            uCrud.Update(movie);
+                            return RetrieveById(movie.id);
+                        
+                    }
+                    else
+                    {
+                        throw new Exception("La pelicula  no existe");
+                    }
+                }
+                else
+                {
+                    throw new Exception("La pelicula porque ya hay un titulo con el mismo nombre");
+                }
+            }
+            catch (Exception ex)
+            {
+                ManagerExection(ex);
+                return null;
+            }
+        }
+
+        public Movie Delete(int id)
+        {
+            try
+            {
+                var uCrud = new MovieCrudFactory();
+                var movie = uCrud.RetrieveById<Movie>(id);
+                if (movie != null)
+                {
+                    uCrud.Delete(movie);
+                    return movie;
+                }
+                else
+                {
+                    throw new Exception("La pelicula no existe");
+                }
+            }
+            catch (Exception ex)
+            {
+                ManagerExection(ex);
+                return null;
+            }
+        }
+
         private bool ExistsTitle(string title)
         {
             var mCrud = new MovieCrudFactory();

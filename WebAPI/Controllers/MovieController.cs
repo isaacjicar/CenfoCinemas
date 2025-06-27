@@ -84,5 +84,40 @@ namespace WebAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPut]
+        [Route("Update")]
+        public ActionResult Update(Movie movie)
+        {
+            try
+            {
+                var um = new MovieManager();
+                um.Update(movie);
+                return Ok(movie);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        [HttpDelete]
+        [Route("Delete")]
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                var um = new MovieManager();
+                um.Delete(id);
+                return Ok(id);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
