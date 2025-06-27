@@ -49,12 +49,24 @@ namespace CoreApp
             var uCrud = new MovieCrudFactory();
             return uCrud.RetrieveAll<Movie>();
         }
+        public Movie RetrieveByTitle(string title)
+        {
+            var uCrud = new MovieCrudFactory();
+            var udto = new Movie { Title = title };
+            return uCrud.RetrieveByTitle<Movie>(udto);
+        }
 
+        public Movie RetrieveById(int Id)
+        {
+            var uCrud = new MovieCrudFactory();
+            return uCrud.RetrieveById<Movie>(Id);
+        }
 
         private bool ExistsTitle(string title)
         {
             var mCrud = new MovieCrudFactory();
-            var movie = mCrud.RetrieveByTitle<Movie>(title);
+            var movieParam = new Movie { Title = title };
+            var movie = mCrud.RetrieveByTitle<Movie>(movieParam);
             return movie != null;
         }
 

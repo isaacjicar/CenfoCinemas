@@ -44,5 +44,45 @@ namespace WebAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("RetrieveByTitle")]
+        public ActionResult RetrieveByTitle(String title)
+        {
+            try
+            {
+                var um = new MovieManager();
+                var userByTitle = um.RetrieveByTitle(title);
+                if (userByTitle == null)
+                {
+                    return NotFound($"El Titulo de la pelicula {title} que estas buscando no se encuentra");
+                }
+                return Ok(userByTitle);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("RetrieveById")]
+        public ActionResult RetrieveById(int id)
+        {
+            try
+            {
+                var um = new MovieManager();
+                var userById = um.RetrieveById(id);
+                if (userById == null)
+                {
+                    return NotFound($"El Titulo id {id} que estas buscando no se encuentra");
+                }
+                return Ok(userById);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

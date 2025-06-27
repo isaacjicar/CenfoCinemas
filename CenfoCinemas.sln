@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36109.1 d17.14
+VisualStudioVersion = 17.14.36109.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOs", "DTOs\DTOs.csproj", "{66049203-5ED2-4747-AA36-CFC67D7F65B6}"
 EndProject
@@ -53,8 +53,8 @@ Global
 		{CECC12C3-4B65-459C-B662-3E051A948DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CECC12C3-4B65-459C-B662-3E051A948DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CECC12C3-4B65-459C-B662-3E051A948DFA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8E4180CC-5815-4A10-999D-15D586EB3592}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8E4180CC-5815-4A10-999D-15D586EB3592}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E4180CC-5815-4A10-999D-15D586EB3592}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{8E4180CC-5815-4A10-999D-15D586EB3592}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{8E4180CC-5815-4A10-999D-15D586EB3592}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E4180CC-5815-4A10-999D-15D586EB3592}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A933D9E4-EE04-44EF-87BC-B585E80B57E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

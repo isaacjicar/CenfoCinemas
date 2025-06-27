@@ -71,10 +71,10 @@ namespace DataAccess.CRUD
 
         }
 
-        public  T RetrieveByTitle<T>(String Title)
+        public  T RetrieveByTitle<T>(Movie movie)
         {
             var sqlOperation = new SqlOperations() { ProcedureName = "SP_RET_TITLE_Movie" };
-            sqlOperation.AddStringParameter("@P_Title", Title);
+            sqlOperation.AddStringParameter("@P_Title", movie.Title);
             var lstResults = sqlDao.ExecuteQueryProcedure(sqlOperation);
             if (lstResults.Count > 0)
             {
