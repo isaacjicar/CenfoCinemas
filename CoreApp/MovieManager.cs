@@ -66,27 +66,23 @@ namespace CoreApp
         {
             try
             {
-                if (ExistsTitle(movie.Title))
-                {
-                    var uCrud = new MovieCrudFactory();
-                    var exTM = uCrud.RetrieveById<Movie>(movie.id);
+                var uCrud = new MovieCrudFactory();
+                var existingMovie = uCrud.RetrieveById<Movie>(movie.id);
 
-                    if (exTM != null)
-                    {
-                      
-                            uCrud.Update(movie);
-                            return RetrieveById(movie.id);
-                        
-                    }
-                    else
-                    {
-                        throw new Exception("La pelicula  no existe");
-                    }
-                }
-                else
+                if (existingMovie == null)
                 {
-                    throw new Exception("La pelicula porque ya hay un titulo con el mismo nombre");
+                    throw new Exception("La película no existe");
                 }
+
+                var movieWithSameTitle = uCrud.RetrieveByTitle<Movie>(new Movie { Title = movie.Title });
+
+                if (movieWithSameTitle != null && movieWithSameTitle.id != movie.id)
+                {
+                    throw new Exception("Ya existe otra película con el mismo título");
+                }
+
+                uCrud.Update(movie);
+                return RetrieveById(movie.id);
             }
             catch (Exception ex)
             {
@@ -94,6 +90,7 @@ namespace CoreApp
                 return null;
             }
         }
+
 
         public Movie Delete(int id)
         {

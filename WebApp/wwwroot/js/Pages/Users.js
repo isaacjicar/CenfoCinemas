@@ -12,21 +12,21 @@
         var service = this.ApiEndPontName + "/RetrieveAll";
         var urlService = ca.GetUrlApiService(service);
 
-        var columns = [
-            { 'data': 'id' },
-            { 'data': 'userCode' },
-            { 'data': 'name' },
-            { 'data': 'email' },      // Asegúrate que la propiedad se llama así
-            { 'data': 'birthDate' },
-            { 'data': 'status' }
-        ];
+        var columns = [];
+        columns[0] = { 'data': 'id' }
+        columns[1] = { 'data': 'userCode' }
+        columns[2] = { 'data': 'name' }
+        columns[3] = { 'data': 'email' }
+        columns[4] = { 'data': 'birthDate' }
+        columns[5] = { 'data': 'status' }
 
-        $("#tblUsers").DataTable({
+        // Invocamos a DataTable para llenar la tabla de usuarios más robusta
+        $('#tblUsers').DataTable({
             "ajax": {
-                "url": urlService,
+                url: urlService,
                 "dataSrc": ""
             },
-            "columns": columns
+            columns: columns
         });
     }
 }

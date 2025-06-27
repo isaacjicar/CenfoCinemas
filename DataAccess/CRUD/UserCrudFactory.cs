@@ -111,7 +111,7 @@ namespace DataAccess.CRUD
             var sqlOperation = new SqlOperations() { ProcedureName = "UP_USER_PR" };
 
             sqlOperation.AddIntParam("P_Id", user.id);
-            sqlOperation.AddStringParameter("P_UserCode", user.UserCode);
+            sqlOperation.AddStringParameter("@P_UserCode", user.UserCode);
             sqlOperation.AddStringParameter("P_Name", user.Name);
             sqlOperation.AddStringParameter("P_Email", user.Email);
             sqlOperation.AddStringParameter("P_Password", user.Password);
