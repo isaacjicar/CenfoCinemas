@@ -16,6 +16,7 @@ namespace WebAPI.Controllers
         {
             try
             {
+               
                 var um = new MovieManager();
                 um.Create(movie);
                 return Ok("Película creada correctamente: " + movie.Title);

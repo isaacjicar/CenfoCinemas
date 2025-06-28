@@ -5,7 +5,19 @@
     this.InitView = function () {
         console.log("User init view --> ok");
         this.LoadTable();
-    }
+
+        $('#btnCreate').click(() => {
+            this.create();
+        });
+
+        $('#btnUpdate').click(() => {
+            this.update();
+        });
+
+        $('#btnDelete').click(() => {
+            this.delete();
+        });
+    };
 
     this.LoadTable = function () {
         var ca = new ControlActions();
@@ -20,7 +32,6 @@
         columns[4] = { 'data': 'birthDate' }
         columns[5] = { 'data': 'status' }
 
-        // Invocamos a DataTable para llenar la tabla de usuarios más robusta
         $('#tblUsers').DataTable({
             "ajax": {
                 url: urlService,
@@ -28,7 +39,70 @@
             },
             columns: columns
         });
-    }
+
+        $('#tblUsers tbody').on('click', 'tr', function () {
+            var row = $(this).closest('tr');
+
+            var userDTO = $('#tblUsers').DataTable().row(row).data();
+
+            $('#txtId').val(userDTO.id);
+            $('#txtUserCode').val(userDTO.userCode);
+            $('#txtName').val(userDTO.name);
+            $('#txtEmail').val(userDTO.email);
+            $('#txtStatus').val(userDTO.status);
+
+            var onlyDate = userDTO.birthDate.split("T");
+            $('#txtBDate').val(onlyDate[0]);
+        });
+    };
+
+    this.create = function () {
+        var userDTO = this.getDTO();
+
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPontName + "/Create";
+
+        ca.PostToAPI(urlService, userDTO, function () {
+            $('#tblUsers').DataTable().ajax.reload();
+        });
+    };
+
+    this.update = function () {
+        var userDTO = this.getDTO();
+
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPontName + "/Update";
+
+        ca.PutToAPI(urlService, userDTO, function () {
+            $('#tblUsers').DataTable().ajax.reload();
+        });
+    };
+
+    this.delete = function () {
+        var userDTO = this.getDTO();
+
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPontName + "/Delete?id=" + userDTO.id;
+
+        ca.DeleteToAPI(urlService, userDTO, function () {
+            $('#tblUsers').DataTable().ajax.reload();
+        });
+    };
+
+
+    this.getDTO = function () {
+        return {
+            id: $('#txtId').val(),
+            created: "2025-01-01",
+            updated: "2025-01-01",
+            userCode: $('#txtUserCode').val(),
+            name: $('#txtName').val(),
+            email: $('#txtEmail').val(),
+            status: $('#txtStatus').val(),
+            birthDate: $('#txtBDate').val(),
+            password: $('#txtPassword').val()
+        };
+    };
 }
 
 $(document).ready(function () {
