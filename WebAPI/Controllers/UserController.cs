@@ -18,14 +18,15 @@ namespace WebAPI.Controllers
             {
                 var um = new UserManager();
                 um.Create(user);
-                return Ok("Usuario creado correctamente" + user);
 
+                return Ok(new { message = "Usuario creado correctamente", data = user });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, new { message = ex.Message });
             }
         }
+
 
         [HttpGet]
         [Route("RetrieveAll")]

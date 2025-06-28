@@ -57,7 +57,7 @@
     };
 
     this.create = function () {
-        var userDTO = this.getDTO();
+        var userDTO = this.getCreateDTO();
 
         var ca = new ControlActions();
         var urlService = this.ApiEndPontName + "/Create";
@@ -68,7 +68,7 @@
     };
 
     this.update = function () {
-        var userDTO = this.getDTO();
+        var userDTO = this.getUpdateDTO();
 
         var ca = new ControlActions();
         var urlService = this.ApiEndPontName + "/Update";
@@ -79,7 +79,7 @@
     };
 
     this.delete = function () {
-        var userDTO = this.getDTO();
+        var userDTO = this.getUpdateDTO();
 
         var ca = new ControlActions();
         var urlService = this.ApiEndPontName + "/Delete?id=" + userDTO.id;
@@ -90,9 +90,8 @@
     };
 
 
-    this.getDTO = function () {
+    this.getCreateDTO = function () {
         return {
-            id: $('#txtId').val(),
             created: "2025-01-01",
             updated: "2025-01-01",
             userCode: $('#txtUserCode').val(),
@@ -103,6 +102,21 @@
             password: $('#txtPassword').val()
         };
     };
+
+    this.getUpdateDTO = function () {
+        return {
+            id: parseInt($('#txtId').val()),
+            created: "2025-01-01",
+            updated: "2025-01-01",
+            userCode: $('#txtUserCode').val(),
+            name: $('#txtName').val(),
+            email: $('#txtEmail').val(),
+            status: $('#txtStatus').val(),
+            birthDate: $('#txtBDate').val(),
+            password: $('#txtPassword').val()
+        };
+    };
+
 }
 
 $(document).ready(function () {

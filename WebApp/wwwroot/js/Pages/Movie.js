@@ -24,14 +24,15 @@
         var service = this.ApiEndPontName + "/RetrieveAll";
         var urlService = ca.GetUrlApiService(service);
 
-        var columns = [
-            { 'data': 'id' },   
-            { 'data': 'title' },
-            { 'data': 'description' },
-            { 'data': 'releaseDate' },
-            { 'data': 'genre' },
-            { 'data': 'director' }
-        ];
+        var columns = [];
+        columns[0] = { 'data': 'id' },  
+        columns[1] = { 'data': 'title' },
+        columns[2] = { 'data': 'description' },
+        columns[3] = { 'data': 'genre' },
+        columns[4] = { 'data': 'releaseDate' },
+        columns[5] = { 'data': 'director' }
+
+   
 
         $('#tblMovies').DataTable({
             "ajax": {
@@ -58,7 +59,7 @@
     };
 
     this.create = function () {
-        var movieDTO = this.getDTO();
+        var movieDTO = this.getCreateDTO();
 
         var ca = new ControlActions();
         var urlService = this.ApiEndPontName + "/Create";
@@ -69,7 +70,7 @@
     };
 
     this.update = function () {
-        var movieDTO = this.getDTO();
+        var movieDTO = this.getUpdateDTO();
 
         var ca = new ControlActions();
         var urlService = this.ApiEndPontName + "/Update";
@@ -80,7 +81,7 @@
     };
 
     this.delete = function () {
-        var movieDTO = this.getDTO();
+        var movieDTO = this.getUpdateDTO();
 
         var ca = new ControlActions();
         var urlService = this.ApiEndPontName + "/Delete?id=" + movieDTO.id;
@@ -90,9 +91,8 @@
         });
     };
 
-    this.getDTO = function () {
+    this.getCreateDTO = function () {
         return {
-            id: $('#txtId').val(),
             title: $('#txttitle').val(),
             description: $('#txtdescription').val(),
             releaseDate: $('#txtreleaseDate').val(),
@@ -100,6 +100,18 @@
             director: $('#txtdirector').val()
         };
     };
+
+    this.getUpdateDTO = function () {
+        return {
+            id: parseInt($('#txtId').val()),
+            title: $('#txttitle').val(),
+            description: $('#txtdescription').val(),
+            releaseDate: $('#txtreleaseDate').val(),
+            genre: $('#txtgenre').val(),
+            director: $('#txtdirector').val()
+        };
+    };
+
 
 
 }

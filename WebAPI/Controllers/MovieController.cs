@@ -19,7 +19,8 @@ namespace WebAPI.Controllers
                
                 var um = new MovieManager();
                 um.Create(movie);
-                return Ok("Película creada correctamente: " + movie.Title);
+                return Ok(new { message = "Película creada correctamente", data = movie });
+
 
             }
             catch (Exception ex)
