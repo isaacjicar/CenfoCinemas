@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - CenfoCinemasUI
+name: Build and deploy ASP.Net Core app to Azure Web App - CenfoCinemas-IsaacJimenez
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: windows-latest
     permissions:
-      contents: read # Required for actions/checkout
+      contents: read #This is required for actions/checkout
 
     steps:
       - uses: actions/checkout@v4
@@ -23,32 +23,34 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Build WebApp
-        run: dotnet build ./5_WebApp/WebApp/WebApp.csproj --configuration Release
+      - name: Build WEB API
+        run: dotnet build ./WebAPI/WebAPI.csproj --configuration Debug
 
-      - name: Publish WebApp
-        run: dotnet publish ./5_WebApp/WebApp/WebApp.csproj -c Release -o "${{env.DOTNET_ROOT}}/mywebapp"
+
+      - name: dotnet publish WEB API
+        run: dotnet publish  ./WebAPI/WebAPI.csproj -c Debug -o "${{env.DOTNET_ROOT}}/myapp"
+  
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/mywebapp
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: windows-latest
     needs: build
-    
+
     permissions:
-      id-token: write # Required for requesting the JWT
-      contents: read  # Required for actions/checkout
+      id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -60,7 +62,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'CenfoCinemasUI' 
+          app-name: 'CenfoCinemas-IsaacJimenez'
           slot-name: 'Production'
           package: .
-          
