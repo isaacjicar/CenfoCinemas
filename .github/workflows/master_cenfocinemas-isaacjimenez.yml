@@ -26,8 +26,15 @@ jobs:
       - name: Build WEB API
         run: dotnet build ./WebAPI/WebAPI.csproj --configuration Debug
 
+
+      - name: Build WEB APP
+        run: dotnet build ./WebAPP/WebAPP.csproj --configuration Debug
+
       - name: dotnet publish WEB API
-        run: dotnet publish  ./WebAPI/WebAPI.csproj -c Debug -o "${{env.DOTNET_ROOT}}/myapp"
+        run: dotnet publish  ./WebAPI/WebAPI.csproj -c Debug -o "${{env.DOTNET_ROOT}}/mypi"
+
+      - name: dotnet publish WEB APP
+        run: dotnet publish  ./WebAPI/WebAPI.csproj -c Debug -o "${{env.DOTNET_ROOT}}/mywebapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
