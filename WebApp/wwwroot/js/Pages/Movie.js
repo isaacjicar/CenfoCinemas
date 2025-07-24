@@ -17,6 +17,14 @@
         $('#btnDelete').click(() => {
             this.delete();
         });
+        $('#btnBuscarId').click(() => {
+            this.searchById();
+        });
+
+        $('#btnBuscarTitle').click(() => {
+            this.searchByTitle();
+        });
+
     }
 
     this.LoadTable = function () {
@@ -110,6 +118,50 @@
             genre: $('#txtgenre').val(),
             director: $('#txtdirector').val()
         };
+    };
+
+    this.searchById = function () {
+        var id = $('#txtbuscarId').val();
+
+        if (!id) {
+            alert("Por favor ingrese un ID para buscar.");
+            return;
+        }
+
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPontName + "/RetrieveById?id=" + id;
+
+        ca.GetToApi(urlService, function (movieDTO) {
+            $('#txtId').val(movieDTO.id);
+            $('#txttitle').val(movieDTO.title);
+            $('#txtdescription').val(movieDTO.description);
+            $('#txtgenre').val(movieDTO.genre);
+            $('#txtdirector').val(movieDTO.director);
+            var olnyDate = movieDTO.releaseDate.split("T");
+            $('#txtreleaseDate').val(olnyDate[0]);
+        });
+    };
+
+    this.searchByTitle = function () {
+        var title = $('#txtbuscarTitle').val();
+
+        if (!title) {
+            alert("Por favor ingrese un título para buscar.");
+            return;
+        }
+
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPontName + "/RetrieveByTitle?title=" + encodeURIComponent(title);
+
+        ca.GetToApi(urlService, function (movieDTO) {
+            $('#txtId').val(movieDTO.id);
+            $('#txttitle').val(movieDTO.title);
+            $('#txtdescription').val(movieDTO.description);
+            $('#txtgenre').val(movieDTO.genre);
+            $('#txtdirector').val(movieDTO.director);
+            var olnyDate = movieDTO.releaseDate.split("T");
+            $('#txtreleaseDate').val(olnyDate[0]);
+        });
     };
 
 

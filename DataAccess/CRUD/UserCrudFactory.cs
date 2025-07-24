@@ -2,9 +2,6 @@
 using DTOs;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.CRUD
 {
@@ -14,9 +11,9 @@ namespace DataAccess.CRUD
         {
             sqlDao = SqlDao.GetInstance();
         }
+
         public override void Create(baseDTO baseDto)
         {
-            
             var user = baseDto as User;
             var sqlOperation = new SqlOperations() { ProcedureName = "CRE_USER_PR" };
 
@@ -30,7 +27,6 @@ namespace DataAccess.CRUD
             sqlDao.ExecuteProcedure(sqlOperation);
         }
 
-
         public override void Delete(baseDTO baseDto)
         {
             var user = baseDto as User;
@@ -42,61 +38,61 @@ namespace DataAccess.CRUD
 
         public override List<T> RetrieveAll<T>()
         {
-           var lsUSer = new List<T>();
+            var listUsers = new List<T>();
             var sqlOperation = new SqlOperations() { ProcedureName = "RET_ALL_USERS_PR" };
-            var lstResults = sqlDao.ExecuteQueryProcedure(sqlOperation);
-            if (lstResults.Count > 0)
+            var result = sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            foreach (var row in result)
             {
-                foreach (var row in lstResults)
-                {
-                    var user = BuildUser(row);
-                    lsUSer.Add((T)Convert.ChangeType(user, typeof(T)));
-                }
+                var user = BuildUser(row);
+                listUsers.Add((T)Convert.ChangeType(user, typeof(T)));
             }
-            return lsUSer;
+
+            return listUsers;
         }
 
         public override T RetrieveById<T>(int id)
         {
             var sqlOperation = new SqlOperations() { ProcedureName = "RET_ID_USERS_PR" };
-            sqlOperation.AddIntParam("@P_Id", id);
-            var lstResults = sqlDao.ExecuteQueryProcedure(sqlOperation);
-            if (lstResults.Count > 0)
+            sqlOperation.AddIntParam("P_Id", id);
+            var result = sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            if (result.Count > 0)
             {
-                var row = lstResults[0];
-                var user = BuildUser(row);
+                var user = BuildUser(result[0]);
                 return (T)Convert.ChangeType(user, typeof(T));
             }
-           
+
             return default(T);
-         
         }
 
         public T RetrieveByUserCode<T>(User user)
         {
             var sqlOperation = new SqlOperations() { ProcedureName = "RET_UserCode_USERS_PR" };
-            sqlOperation.AddStringParameter("@P_Usercode", user.UserCode);
-            var lstResults = sqlDao.ExecuteQueryProcedure(sqlOperation);
-            if (lstResults.Count > 0)
+            sqlOperation.AddStringParameter("P_Usercode", user.UserCode); // ✅ Sin el @
+            var result = sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            if (result.Count > 0)
             {
-                var row = lstResults[0];
-                var movie = BuildUser(row);
-                return (T)Convert.ChangeType(movie, typeof(T));
+                var userBuilt = BuildUser(result[0]);
+                return (T)Convert.ChangeType(userBuilt, typeof(T));
             }
+
             return default(T);
         }
 
         public T RetrieveByEmail<T>(User user)
         {
             var sqlOperation = new SqlOperations() { ProcedureName = "RET_Email_USERS_PR" };
-            sqlOperation.AddStringParameter("@P_Email", user.Email);
-            var lstResults = sqlDao.ExecuteQueryProcedure(sqlOperation);
-            if (lstResults.Count > 0)
+            sqlOperation.AddStringParameter("P_Email", user.Email); // ✅ Sin el @
+            var result = sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            if (result.Count > 0)
             {
-                var row = lstResults[0];
-                var movie = BuildUser(row);
-                return (T)Convert.ChangeType(movie, typeof(T));
+                var userBuilt = BuildUser(result[0]);
+                return (T)Convert.ChangeType(userBuilt, typeof(T));
             }
+
             return default(T);
         }
 
@@ -111,7 +107,7 @@ namespace DataAccess.CRUD
             var sqlOperation = new SqlOperations() { ProcedureName = "UP_USER_PR" };
 
             sqlOperation.AddIntParam("P_Id", user.id);
-            sqlOperation.AddStringParameter("@P_UserCode", user.UserCode);
+            sqlOperation.AddStringParameter("P_UserCode", user.UserCode);
             sqlOperation.AddStringParameter("P_Name", user.Name);
             sqlOperation.AddStringParameter("P_Email", user.Email);
             sqlOperation.AddStringParameter("P_Password", user.Password);
@@ -121,20 +117,17 @@ namespace DataAccess.CRUD
             sqlDao.ExecuteProcedure(sqlOperation);
         }
 
-
-     
         private User BuildUser(Dictionary<string, object> row)
         {
             return new User()
             {
                 id = (int)row["Id"],
                 created = (DateTime)row["Created"],
-                //Updated = (DateTime)row["Updated"],
-                UserCode = (String)row["UserCode"],
-                Name = (String)row["Name"],
-                Email = (String)row["Email"],
-                Password = (String)row["Password"],
-                Status = (String)row["Status"],
+                UserCode = (string)row["UserCode"],
+                Name = (string)row["Name"],
+                Email = (string)row["Email"],
+                Password = (string)row["Password"],
+                Status = (string)row["Status"],
                 BirthDate = (DateTime)row["BirthDate"]
             };
         }

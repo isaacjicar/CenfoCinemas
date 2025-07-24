@@ -65,20 +65,23 @@ namespace WebAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
         [HttpGet]
         [Route("RetrieveByEmail")]
-        public ActionResult RetrieveByEmail(String email )
+        public ActionResult RetrieveByEmail(string email)
         {
             try
             {
                 var um = new UserManager();
-                var userByEmail = um.RetrieveByEmail(email);
-                if(userByEmail == null)
+
+                var userByEmail = um.RetrieveAll()
+                                    .FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+
+                if (userByEmail == null)
                 {
-                    return NotFound($"El correo {email} que estas buscando no se encuentra");
+                    return NotFound($"El correo {email} que estás buscando no se encuentra");
                 }
-                return Ok();
+
+                return Ok(userByEmail); // ✅ Envía el usuario como JSON
             }
             catch (Exception ex)
             {
@@ -86,19 +89,24 @@ namespace WebAPI.Controllers
             }
         }
 
+
+
         [HttpGet]
         [Route("RetrieveByUserCode")]
-        public ActionResult RetrieveByUserCode(String userCode)
+        public ActionResult RetrieveByUserCode(string userCode)
         {
             try
             {
                 var um = new UserManager();
-                var userByUserCode = um.RetrieveByUserCode(userCode);
 
-                if(userByUserCode == null)
+                var userByUserCode = um.RetrieveAll()
+                                       .FirstOrDefault(u => u.UserCode.ToLower() == userCode.ToLower());
+
+                if (userByUserCode == null)
                 {
-                    return NotFound($"El codigo de usuario {userCode} que estas buscando no se encuentra ");
+                    return NotFound($"El código de usuario {userCode} que estás buscando no se encuentra.");
                 }
+
                 return Ok(userByUserCode);
             }
             catch (Exception ex)
@@ -106,6 +114,7 @@ namespace WebAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
 
         [HttpPut]
         [Route("Update")]

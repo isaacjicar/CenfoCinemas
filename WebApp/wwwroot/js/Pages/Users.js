@@ -17,6 +17,18 @@
         $('#btnDelete').click(() => {
             this.delete();
         });
+
+        $('#btnBuscarId').click(() => {
+            this.searchById();
+        });
+
+        $('#btnRetrieveByEmail').click(() => {
+            this.searchByEmail();
+        });
+
+        $('#btnRetrieveByUserCode').click(() => {
+            this.searchByUserCode();
+        });
     };
 
     this.LoadTable = function () {
@@ -42,17 +54,8 @@
 
         $('#tblUsers tbody').on('click', 'tr', function () {
             var row = $(this).closest('tr');
-
             var userDTO = $('#tblUsers').DataTable().row(row).data();
-
-            $('#txtId').val(userDTO.id);
-            $('#txtUserCode').val(userDTO.userCode);
-            $('#txtName').val(userDTO.name);
-            $('#txtEmail').val(userDTO.email);
-            $('#txtStatus').val(userDTO.status);
-
-            var onlyDate = userDTO.birthDate.split("T");
-            $('#txtBDate').val(onlyDate[0]);
+            fillUserForm(userDTO);
         });
     };
 
@@ -89,7 +92,6 @@
         });
     };
 
-
     this.getCreateDTO = function () {
         return {
             created: "2025-01-01",
@@ -117,6 +119,98 @@
         };
     };
 
+    this.searchById = function () {
+        const id = $('#txtbuscarId').val();
+        if (!id) {
+            alert("Ingrese un ID para buscar");
+            return;
+        }
+
+        const ca = new ControlActions();
+        const urlService = this.ApiEndPontName + "/RetrieveById?id=" + id;
+
+        ca.GetToApi(urlService, function (userDTO) {
+            fillUserForm(userDTO);
+        });
+    };
+
+    this.searchByEmail = function () {
+        const email = $('#txtRetrieveByEmail').val().trim();
+        if (!email) {
+            alert("Ingrese un email para buscar");
+            return;
+        }
+
+        const ca = new ControlActions();
+        const urlService = this.ApiEndPontName + "/RetrieveByEmail?email=" + encodeURIComponent(email);
+        console.log("➡️ Email URL: ", urlService); // ✅ Verifica esto
+
+        ca.GetToApi(urlService, function (userDTO) {
+            console.log("✅ Resultado recibido: ", userDTO);
+
+            // Detectar si viene como { data: user } o directamente
+            const data = userDTO?.data || userDTO;
+
+            if (!data || !data.id) {
+                alert("Usuario no encontrado.");
+                return;
+            }
+
+            fillUserForm(data);
+        });
+
+
+    };
+
+
+    this.searchByUserCode = function () {
+        const code = $('#txtRetrieveByUserCode').val().trim();
+        if (!code) {
+            alert("Ingrese un código de usuario para buscar");
+            return;
+        }
+
+        const ca = new ControlActions();
+        const urlService = this.ApiEndPontName + "/RetrieveByUserCode?userCode=" + encodeURIComponent(code);
+
+        ca.GetToApi(urlService, function (userDTO) {
+            console.log("✅ Resultado recibido: ", userDTO);
+
+            // Detectar si viene como { data: user } o directamente
+            const data = userDTO?.data || userDTO;
+
+            if (!data || !data.id) {
+                alert("Usuario no encontrado.");
+                return;
+            }
+
+            fillUserForm(data);
+        });
+
+
+    };
+}
+
+// ✅ Función fuera del controlador
+function fillUserForm(userDTO) {
+    $('#txtId').val(userDTO.id);
+    $('#txtUserCode').val(userDTO.userCode);
+    $('#txtName').val(userDTO.name);
+    $('#txtEmail').val(userDTO.email);
+    $('#txtStatus').val(userDTO.status);
+
+    if (userDTO.birthDate) {
+        const onlyDate = userDTO.birthDate.split("T");
+        $('#txtBDate').val(onlyDate[0]);
+    } else {
+        $('#txtBDate').val("");
+    }
+
+    if (userDTO.password) {
+        $('#txtPassword').val(userDTO.password);
+    } else {
+        $('#txtPassword').val("");
+    }
 }
 
 $(document).ready(function () {
